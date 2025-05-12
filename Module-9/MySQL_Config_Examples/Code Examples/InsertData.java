@@ -19,9 +19,9 @@ public class InsertData{
 
       Class.forName("com.mysql.cj.jdbc.Driver");
 
-      String url = "jdbc:mysql://localhost:3306/databasedb?";
+      String url = "jdbc:mysql://localhost:3306/database33?";
 
-      con = DriverManager.getConnection(url + "user=student1&password=pass");
+      con = DriverManager.getConnection(url + "user=student33&password=pass");
 
       stmt = con.createStatement();
     }

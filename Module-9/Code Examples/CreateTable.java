@@ -1,73 +1,61 @@
-/*
- *
- * Professor Darrell Payne
- * Bellevue University
- *
- */
-import java.net.URL;
 import java.sql.*;
 
-public class CreateTable{
+public class CreateTable {
 
-  Connection con;
+    private Connection con;
+    private Statement stmt;
 
-  Statement stmt;
+    public CreateTable() {
+        try {
+            // Load MySQL JDBC Driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
 
-  public CreateTable(){
+            // Connection URL format: jdbc:mysql://host:port/database
+            String url = "jdbc:mysql://localhost:3306/databasedb?useSSL=false&serverTimezone=UTC";
+            String user = "student1";
+            String password = "pass";
 
-    try{
+            // Establish connection
+            con = DriverManager.getConnection(url, user, password);
+            stmt = con.createStatement();
 
-      Class.forName("com.mysql.cj.jdbc.Driver");
+            System.out.println("Connected to the database.");
+        } catch (Exception e) {
+            System.out.println("Error connecting to database: " + e.getMessage());
+            return;
+        }
 
-      String url = "jdbc:mysql://localhost:3306/databasedb?";
+        try {
+            stmt.executeUpdate("DROP TABLE IF EXISTS address33");
+            System.out.println("Table address33 dropped (if it existed).");
+        } catch (SQLException e) {
+            System.out.println("Error dropping table: " + e.getMessage());
+        }
 
-      con = DriverManager.getConnection(url + "user=student1&password=pass");
+        try {
+            stmt.executeUpdate("CREATE TABLE address33 (" +
+                    "ID INT PRIMARY KEY, " +
+                    "LASTNAME VARCHAR(40), " +
+                    "FIRSTNAME VARCHAR(40), " +
+                    "STREET VARCHAR(40), " +
+                    "CITY VARCHAR(40), " +
+                    "STATE VARCHAR(40), " +
+                    "ZIP VARCHAR(40))");
+            System.out.println("Table address33 created successfully.");
+        } catch (SQLException e) {
+            System.out.println("Error creating table: " + e.getMessage());
+        }
 
-      stmt = con.createStatement();
+        try {
+            stmt.close();
+            con.close();
+            System.out.println("Database connections closed.");
+        } catch (SQLException e) {
+            System.out.println("Error closing connection: " + e.getMessage());
+        }
     }
-    catch(Exception e){
 
-      System.out.println("Error connection to database.");
-      System.exit(0);
+    public static void main(String[] args) {
+        new CreateTable();
     }
-
-    try{
-
-      stmt.executeUpdate("DROP TABLE address33");
-      System.out.println("Table address Dropped");
-    }
-    catch(SQLException e){
-
-      System.out.println("Table address does not exist");
-    }
-
-    try{
-
-      stmt.executeUpdate("CREATE TABLE address33(ID int PRIMARY KEY,LASTNAME varchar(40)," +
-                         "FIRSTNAME varchar(40), STREET varchar(40), CITY varchar(40), STATE varchar(40)," +
-                         "ZIP varchar(40))");
-      System.out.println("Table address Created");
-    }
-    catch(SQLException e){
-
-      System.out.println("Table address Creation failed");
-    }
-
-    try{
-
-      stmt.close();
-
-      con.close();
-      System.out.println("Database connections closed");
-    }
-    catch(SQLException e){
-
-      System.out.println("Connection close failed");
-    }
-  }
-
-  public static void main(String args[]) {
-
-    CreateTable createTable = new CreateTable();
-  }
 }
